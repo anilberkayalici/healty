@@ -1,0 +1,84 @@
+import 'dart:async';
+import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+/// Adım Sayar Servisi (Step Counter Service)
+/// Pedometer sensöründen gerçek zamanlı adım verisi alır
+/// Singleton pattern ile tek instance
+class StepService {
+  // Singleton instance
+  static final StepService _instance = StepService._internal();
+  factory StepService() => _instance;
+  StepService._internal();
+
+  // Stream controller - UI'a adım verisi akışı
+  final StreamController<int> _stepStreamController =
+      StreamController<int>.broadcast();
+
+  // Pedometer subscription
+  StreamSubscription<StepCount>? _stepSubscription;
+
+  // Son adım sayısı
+  int _currentSteps = 0;
+  int get currentSteps => _currentSteps;
+
+  /// Adım stream'i (UI'ın dinleyeceği)
+  Stream<int> get stepStream => _stepStreamController.stream;
+
+  /// Adım saymayı başlat
+  Future<void> startCounting() async {
+    // Eğer zaten dinliyorsa, tekrar başlatma
+    if (_stepSubscription != null) {
+      return;
+    }
+
+    try {
+      // Android için ACTIVITY_RECOGNITION izni iste
+      PermissionStatus status = await Permission.activityRecognition.request();
+
+      if (status.isGranted) {
+        // İzin verildi, sensörü dinle
+        _stepSubscription = Pedometer.stepCountStream.listen(
+          _onStepCount,
+          onError: _onStepCountError,
+        );
+      } else {
+        // İzin verilmedi
+        _stepStreamController.addError('İzin verilmedi. Ayarlardan ACTIVITY_RECOGNITION iznini açın.');
+      }
+    } catch (e) {
+      _stepStreamController.addError('Adım sayar başlatılamadı: $e');
+    }
+  }
+
+  /// Adım verisi geldiğinde çağrılır
+  void _onStepCount(StepCount event) {
+    _currentSteps = event.steps;
+    _stepStreamController.add(_currentSteps);
+    print('📊 Adım Sayısı: $_currentSteps');
+  }
+
+  /// Hata durumunda çağrılır
+  void _onStepCountError(error) {
+    print('❌ Adım sayar hatası: $error');
+    
+    // Kullanıcıya anlamlı hata mesajı
+    if (error.toString().contains('not available')) {
+      _stepStreamController.addError('Adım sensörü bulunamadı');
+    } else {
+      _stepStreamController.addError('Sensör hatası: $error');
+    }
+  }
+
+  /// Adım saymayı durdur
+  void stopCounting() {
+    _stepSubscription?.cancel();
+    _stepSubscription = null;
+  }
+
+  /// Servisi temizle
+  void dispose() {
+    stopCounting();
+    _stepStreamController.close();
+  }
+}

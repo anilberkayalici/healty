@@ -1,0 +1,62 @@
+name: posture_guard
+description: Boyun sağlığını koruyan akıllı mobil uygulama - Tech Neck önleyici
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Sensör yönetimi - Accelerometer ve Gyroscope için
+  sensors_plus: ^4.0.2
+  
+  # Yerel SQL veritabanı - posture_logs tablosu için
+  sqflite: ^2.3.0
+  
+  # Veritabanı dosya yolu yönetimi
+  path: ^1.8.3
+  
+  # Arka plan servisi altyapısı (ilerde kullanılacak)
+  flutter_background_service: ^5.0.5
+  
+  # Adım sayar (Step Counter)
+  pedometer: ^4.0.1
+  
+  # İzin yönetimi (Permission Handler)
+  permission_handler: ^11.0.1
+  
+  # Kalıcı veri saklama (Persistent Storage)
+  shared_preferences: ^2.2.2
+  
+  # Ekran süresi takibi (Screen Time - Android only)
+  usage_stats: ^1.3.1
+
+  # Local notifications for usage reminders
+  flutter_local_notifications: ^17.0.0
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/happy_koala.png
+    - assets/icon.png
+    - assets/icons/glass.png
+
+# App Icon Configuration (clean, no adaptive icons or backgrounds)
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21

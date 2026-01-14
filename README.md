@@ -1,69 +1,49 @@
-# PostureGuard 🛡️
+# Healty — Health & Wellness App (Flutter Prototype)
 
-Boyun sağlığını koruyan akıllı mobil uygulama - Tech Neck önleyici
+Healty is a Flutter mobile app prototype for daily health habits and usage awareness.  
+**Status:** Under active development (not a final product).
 
-## 📋 Proje Vizyonu
-İnsanların telefona bakarken boyunlarını 60 dereceden fazla eğmelerini engelleyen kritik sağlık uygulaması.
+## Features
+- **Step counter** (daily activity tracking)
+- **Water intake reminder**
+- **Screen Time dashboard**(real app usage via Android Usage Access; Today/Week breakdown)
+- **Posture awareness** (tech-neck angle feedback)
+- **Usage limit alerts** (sends notifications when app usage exceeds a threshold)
+- **Offline-first** (works without a backend)
 
-## 🏗️ Proje Yapısı (Modüler Dizin Sistemi)
+## Tech Stack
+- Flutter / Dart
+- Local storage (offline usage)
 
-```
-posture_guard/
-├── lib/
-│   ├── main.dart              # Ana uygulama giriş noktası
-│   ├── screens/               # UI ekranları
-│   ├── services/              # Sensör servisleri ve arka plan işlemleri
-│   ├── database/              # SQLite veritabanı işlemleri
-│   ├── models/                # Veri modelleri (posture_log, vb.)
-│   └── utils/                 # Yardımcı fonksiyonlar ve sabitler
-└── pubspec.yaml               # Paket bağımlılıkları
-```
+## Permissions (Android)
+- **Physical Activity / Activity Recognition** for step counting
+- **Usage Access (UsageStats)** for real app usage (Screen Time)
+- **Notifications** for reminders and usage limit alerts
 
-## 📦 Kullanılan Paketler
-
-1. **sensors_plus** (^4.0.2) - Accelerometer ve Gyroscope yönetimi
-2. **sqflite** (^2.3.0) - Yerel SQL veritabanı
-3. **path** (^1.8.3) - Dosya yolu yönetimi
-4. **flutter_background_service** (^5.0.5) - Arka plan servisi altyapısı
-
-## 🎯 Mevcut Durum (Adım 1 - İskelet Kod)
-
-✅ **Tamamlanan Özellikler:**
-- Modüler proje yapısı kuruldu
-- Gerekli tüm paketler eklendi
-- Sensör okuma sistemi hazır
-- Pitch açısı hesaplama algoritması çalışıyor
-- Dinamik UI geri bildirimi:
-  - Açı < 60° → Yeşil arkaplan
-  - Açı ≥ 60° → Kırmızı arkaplan
-- Anlık açı değeri büyük yazı ile gösteriliyor
-
-## 🔜 Sonraki Adımlar
-- Blur efekti (BackdropFilter) implementasyonu
-- SQLite veritabanı kurulumu (posture_logs tablosu)
-- Arka plan servisi entegrasyonu
-- Veri loglama sistemi
-
-## 🚀 Kurulum ve Çalıştırma
-
+## Getting Started
 ```bash
-# Paketleri yükle
 flutter pub get
-
-# Uygulamayı çalıştır
 flutter run
 ```
 
-## 💡 Teknik Notlar
-
-### Pitch Açısı Hesaplama
-```dart
-pitch = atan2(y, sqrt(x² + z²)) × (180/π)
+## Project Structure
+```text
+lib/
+  screens/        UI screens (dashboard, water, screen time, posture, etc.)
+  services/       Background tasks / reminders / integrations
+  models/         Data models
+  utils/          Helpers & constants
+assets/           App assets
 ```
-- **x**: Yatay eksen (sağ/sol)
-- **y**: Derinlik ekseni (ileri/geri)  
-- **z**: Dikey eksen (yukarı/aşağı - yerçekimi)
 
----
-**Geliştirici:** Senior Flutter Developer  
-**Versiyon:** 1.0.0 (İskelet Kod)
+## Known Limitations
+- Sensor-based posture estimation is approximate and may vary by device
+
+## Screenshots
+![Home](home.jpeg)
+![Screen Time](screen_time.jpeg)
+![Steps](steps.jpeg)
+![Water Reminder](water.jpeg)
+
+## Notes
+Developed with AI-assisted tooling; requirements, iteration, and testing were done by me.

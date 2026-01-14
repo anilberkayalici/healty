@@ -40,7 +40,7 @@ assets/           App assets
 - Sensor-based posture estimation is approximate and may vary by device
 
 ## Screenshots
-![Home](home.jpeg)
+![Home](home_new.jpeg)
 ![Screen Time](screen_time.jpeg)
 ![Steps](steps.jpeg)
 ![Water Reminder](water.jpeg)

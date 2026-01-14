@@ -132,16 +132,9 @@ class ScreenTimeService {
       entries.sort((a, b) => b.foregroundTime.compareTo(a.foregroundTime));
       final topApps = entries.take(5).toList();
 
-      // Check for notification thresholds
-      for (final app in topApps) {
-        _notificationService.checkAndNotifyIfNeeded(
-          app.packageName,
-          app.foregroundTime,
-          appDisplayName: app.appName,
-        ).catchError((_) {
-          // Silent fail
-        });
-      }
+      // NOTE: Notification checking removed from here
+      // Notifications are now handled by background monitoring service
+      // to enable real-time triggers while user is in other apps
 
       return ScreenTimeSummary(
         totalForegroundTime: total,
@@ -155,6 +148,64 @@ class ScreenTimeService {
         totalForegroundTime: Duration.zero,
         topApps: const [],
         permissionGranted: true, // İzin var ama veri okunamadı
+        supported: true,
+      );
+    }
+  }
+
+  /// Get yesterday's usage summary (for Home screen delta calculation)
+  Future<ScreenTimeSummary> getYesterdayUsageSummary() async {
+    if (!Platform.isAndroid) {
+      return ScreenTimeSummary.unsupported();
+    }
+
+    final hasPermission = await hasUsagePermission();
+    if (!hasPermission) {
+      return ScreenTimeSummary(
+        totalForegroundTime: Duration.zero,
+        topApps: const [],
+        permissionGranted: false,
+        supported: true,
+      );
+    }
+
+    try {
+      final yesterday = DateTime.now().subtract(const Duration(days: 1));
+      final startOfYesterday = DateTime(yesterday.year, yesterday.month, yesterday.day);
+      final endOfYesterday = startOfYesterday.add(const Duration(days: 1));
+
+      final stats = await UsageStats.queryUsageStats(
+        startOfYesterday,
+        endOfYesterday,
+      );
+
+      if (stats == null || stats.isEmpty) {
+        return ScreenTimeSummary(
+          totalForegroundTime: Duration.zero,
+          topApps: const [],
+          permissionGranted: true,
+          supported: true,
+        );
+      }
+
+      // Calculate total only
+      Duration total = Duration.zero;
+      for (final stat in stats) {
+        final usage = Duration(milliseconds: int.parse(stat.totalTimeInForeground ?? '0'));
+        total += usage;
+      }
+
+      return ScreenTimeSummary(
+        totalForegroundTime: total,
+        topApps: const [],
+        permissionGranted: true,
+        supported: true,
+      );
+    } catch (e) {
+      return ScreenTimeSummary(
+        totalForegroundTime: Duration.zero,
+        topApps: const [],
+        permissionGranted: true,
         supported: true,
       );
     }

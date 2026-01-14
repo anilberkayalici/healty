@@ -454,15 +454,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // Posture Guard Card (TIKLANABİLİR - Navigator)
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  // PostureMonitorScreen'e git
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PostureMonitorScreen(),
-                    ),
-                  );
-                },
+                onTap: () => Navigator.pushNamed(context, '/posture'),
                 child: _buildPostureGuardCard(isDark),
               ),
             ),
@@ -470,15 +462,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // Steps Card (TIKLANABİLİR - Haftalık ekrana git)
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  // StepsWeeklyScreen'e git
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const StepsWeeklyScreen(),
-                    ),
-                  );
-                },
+                onTap: () => Navigator.pushNamed(context, '/pedometer'),
                 child: _buildStepsCard(isDark),
               ),
             ),
@@ -492,15 +476,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // Screen Time Card (TIKLANABİLİR - Screen Time ekranına git)
             Expanded(
               child: GestureDetector(
-                onTap: () {
-                  // ScreenTimeScreen'e git
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ScreenTimeScreen(),
-                    ),
-                  );
-                },
+                onTap: () => Navigator.pushNamed(context, '/screen-time'),
                 child: _buildScreenTimeCard(isDark),
               ),
             ),
@@ -842,12 +818,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       label: 'Screen Time',
       accentColor: Theme.of(context).colorScheme.primary,
       isDark: isDark,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const ScreenTimeScreen()),
-        );
-      },
+      onTap: () => Navigator.pushNamed(context, '/screen-time'),
     );
   }
 
@@ -858,12 +829,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       label: 'Adımsayar',
       accentColor: const Color(0xFF4CAF50), // Green
       isDark: isDark,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const StepsWeeklyScreen()),
-        );
-      },
+      onTap: () => Navigator.pushNamed(context, '/pedometer'),
     );
   }
   
@@ -1054,14 +1020,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   /// Hydration Card
   Widget _buildHydrationCard(bool isDark) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const WaterTrackerScreen(),
-          ),
-        );
-      },
+      onTap: () => Navigator.pushNamed(context, '/hydration'),
       child: Container(
       padding: const EdgeInsets.all(16),
       height: 140,

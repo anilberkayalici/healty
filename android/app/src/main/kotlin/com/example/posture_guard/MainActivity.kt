@@ -1,5 +1,6 @@
 package com.example.posture_guard
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -11,10 +12,12 @@ import java.io.ByteArrayOutputStream
 class MainActivity : FlutterActivity() {
 
     private val CHANNEL = "com.example.posture_guard/app_icons"
+    private val SCREEN_TIME_CHANNEL = "com.example.posture_guard/screen_time_monitor"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
+        // App Icons Channel
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
@@ -57,5 +60,28 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+
+        // Screen Time Monitoring Channel
+        val screenTimeChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SCREEN_TIME_CHANNEL)
+        ScreenTimeMonitoringService.methodChannel = screenTimeChannel
+        
+        screenTimeChannel.setMethodCallHandler { call, result ->
+            when (call.method) {
+                "startMonitoring" -> {
+                    val intent = Intent(this, ScreenTimeMonitoringService::class.java)
+                    startService(intent)  // Regular service, no foreground
+                    result.success(true)
+                }
+                "stopMonitoring" -> {
+                    val intent = android.content.Intent(this, ScreenTimeMonitoringService::class.java)
+                    stopService(intent)
+                    result.success(true)
+                }
+                "isMonitoring" -> {
+                    result.success(ScreenTimeMonitoringService.isServiceRunning)
+                }
+                else -> result.notImplemented()
+            }
+        }
     }
 }
